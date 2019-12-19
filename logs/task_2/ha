@@ -1,0 +1,52 @@
+[s6-init] making user provided files available at /var/run/s6/etc...exited 0.
+[s6-init] ensuring user provided files have correct perms...exited 0.
+[fix-attrs.d] applying ownership & permissions fixes...
+[fix-attrs.d] done.
+[cont-init.d] executing container initialization scripts...
+[cont-init.d] done.
+[services.d] starting services
+[services.d] done.
+/opt/bin/serf agent --join ha --replay --event-handler member-join=/serf-handlers/member-join.sh --event-handler member-leave,member-failed=/serf-handlers/member-leave.sh --tag role=balancer
+[WARNING] 352/162246 (167) : Server nodes/s1 is DOWN, reason: Layer4 connection problem, info: "Connection refused", check duration: 0ms. 1 active and 0 backup servers left. 0 sessions active, 0 requeued, 0 remaining in queue.
+==> Starting Serf agent...
+==> Starting Serf agent RPC...
+==> Serf agent running!
+         Node name: 'b698684cb9db'
+         Bind addr: '0.0.0.0:7946'
+          RPC addr: '127.0.0.1:7373'
+         Encrypted: false
+          Snapshot: false
+           Profile: lan
+==> Joining cluster...(replay: true)
+    Join completed. Synced with 1 initial agents
+
+==> Log data will now stream in as it occurs:
+
+    2019/12/19 16:22:46 [INFO] agent: Serf agent starting
+    2019/12/19 16:22:46 [INFO] serf: EventMemberJoin: b698684cb9db 192.168.42.42
+    2019/12/19 16:22:46 [INFO] agent: joining: [ha] replay: true
+    2019/12/19 16:22:46 [INFO] serf: EventMemberJoin: 7c1a46e59963 192.168.42.22
+    2019/12/19 16:22:46 [INFO] serf: EventMemberJoin: 95877f1bf7c4 192.168.42.11
+    2019/12/19 16:22:46 [INFO] agent: joined: 1 nodes
+    2019/12/19 16:22:47 [INFO] agent: Received event: member-join
+    2019/12/19 16:22:47 [ERR] agent: Error invoking script '/serf-handlers/member-join.sh': exit status 127
+[WARNING] 352/162250 (167) : Server nodes/s1 is UP, reason: Layer7 check passed, code: 200, info: "OK", check duration: 4ms. 2 active and 0 backup servers online. 0 sessions requeued, 0 total in queue.
+    2019/12/19 16:24:13 [INFO] memberlist: Suspect 7c1a46e59963 has failed, no acks received
+    2019/12/19 16:24:14 [INFO] memberlist: Suspect 95877f1bf7c4 has failed, no acks received
+    2019/12/19 16:24:15 [INFO] memberlist: Suspect 7c1a46e59963 has failed, no acks received
+    2019/12/19 16:24:16 [INFO] memberlist: Suspect 95877f1bf7c4 has failed, no acks received
+    2019/12/19 16:24:17 [INFO] memberlist: Suspect 95877f1bf7c4 has failed, no acks received
+    2019/12/19 16:24:18 [INFO] memberlist: Marking 7c1a46e59963 as failed, suspect timeout reached
+    2019/12/19 16:24:18 [INFO] serf: EventMemberLeave: 7c1a46e59963 192.168.42.22
+    2019/12/19 16:24:18 [INFO] memberlist: Suspect 7c1a46e59963 has failed, no acks received
+[WARNING] 352/162418 (167) : Server nodes/s1 is DOWN, reason: Layer4 timeout, check duration: 2001ms. 1 active and 0 backup servers left. 0 sessions active, 0 requeued, 0 remaining in queue.
+    2019/12/19 16:24:19 [INFO] agent: Received event: member-leave    2019/12/19 16:24:19 [INFO] memberlist: Marking 95877f1bf7c4 as failed, suspect timeout reached
+
+    2019/12/19 16:24:19 [INFO] serf: EventMemberFailed: 95877f1bf7c4 192.168.42.11
+    2019/12/19 16:24:19 [INFO] memberlist: Suspect 95877f1bf7c4 has failed, no acks received
+    2019/12/19 16:24:19 [ERR] agent: Error invoking script '/serf-handlers/member-leave.sh': exit status 127
+    2019/12/19 16:24:20 [INFO] agent: Received event: member-failed
+    2019/12/19 16:24:20 [ERR] agent: Error invoking script '/serf-handlers/member-leave.sh': exit status 127
+[WARNING] 352/162422 (167) : Server nodes/s2 is DOWN, reason: Layer4 timeout, check duration: 2001ms. 0 active and 0 backup servers left. 0 sessions active, 0 requeued, 0 remaining in queue.
+[ALERT] 352/162422 (167) : backend 'nodes' has no server available!
+
