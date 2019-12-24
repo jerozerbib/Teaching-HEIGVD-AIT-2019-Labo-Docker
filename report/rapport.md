@@ -81,3 +81,45 @@ A `GOSSIP protocol` is a process of computer peer-to-peer communication based on
 In `Serf`'s case, it means that the nodes will be kept updated about the health and the status of the other nodes. It works in a bidirectional communication between the current node and the cluster. That way, new nodes can join the cluster at any time and their health will be checked on by the other nodes.
 
 As seen [here](https://sysadmin.libhunt.com/serf-alternatives), we can see that a lot of alternatives exist. The most significant would be `kubernetes` or `consul`. 
+
+## Task 3 : React to membership changes
+
+### Deliverable 1 : Provide the docker log output for each of the containers:  `ha`, `s1` and `s2`. Put your logs in the `logs` directory you created in the previous task.
+
+Check [Task 3](../logs/task_3)
+
+### Deliverable 2 : Provide the logs from the `ha` container gathered directly from the `/var/log/serf.log` file present in the container. Put the logs in the `logs` directory in your repo.
+
+Same as the previous deliverable.
+
+## Task 4 : Use a template engine to easily generate configuration files
+
+### Deliverable 1 : You probably noticed when we added `xz-utils`, we have to rebuild the whole image which took some time. What can we do to mitigate that? Take a look at the Docker documentation on [image layers](https://docs.docker.com/engine/userguide/storagedriver/imagesandcontainers/#images-and-layers). Tell us about the pros and cons to merge as much as possible of the command. In other words, compare:
+
+```
+RUN command 1
+RUN command 2
+RUN command 3
+```
+
+### vs.
+
+```
+RUN command 1 && command 2 && command 3
+```
+
+### There are also some articles about techniques to reduce the image size. Try to find them. They are talking about `squashing` or `flattening` images.
+
+
+
+### Deliverable 2 : Propose a different approach to architecture our images to be able to reuse as much as possible what we have done. Your proposition should also try to avoid as much as possible repetitions between your images.
+
+In order to optimise as much as possible our architecture, we should try to group our files in the same folder and copy at one place or try to organise our architecture to limit the number of layers as much as possible.   
+
+### Deliverable 3 : Provide the `/tmp/haproxy.cfg` file generated in the `ha` container after each step.  Place the output into the `logs` folder like you already did for the Docker logs in the previous tasks. Three files are expected. 
+
+### In addition, provide a log file containing the output of the `docker ps` console and another file (per container) with `docker inspect `. Four files are expected.
+
+Check [Task 4](../logs/task_4)
+
+### Deliverable 4 : Based on the three output files you have collected, what can you say about the way we generate it? What is the problem if any?

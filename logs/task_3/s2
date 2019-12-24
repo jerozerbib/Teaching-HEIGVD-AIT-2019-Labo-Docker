@@ -1,0 +1,33 @@
+[s6-init] making user provided files available at /var/run/s6/etc...exited 0.
+[s6-init] ensuring user provided files have correct perms...exited 0.
+[fix-attrs.d] applying ownership & permissions fixes...
+[fix-attrs.d] done.
+[cont-init.d] executing container initialization scripts...
+[cont-init.d] done.
+[services.d] starting services
+[services.d] done.
+/opt/bin/serf agent --join ha --replay --event-handler member-join=/serf-handlers/member-join.sh --event-handler member-leave,member-failed=/serf-handlers/member-leave.sh --tag role=backend
+==> Starting Serf agent...
+==> Starting Serf agent RPC...
+==> Serf agent running!
+         Node name: 'b9b76376e9ba'
+         Bind addr: '0.0.0.0:7946'
+          RPC addr: '127.0.0.1:7373'
+         Encrypted: false
+          Snapshot: false
+           Profile: lan
+==> Joining cluster...(replay: true)
+    Join completed. Synced with 1 initial agents
+
+==> Log data will now stream in as it occurs:
+
+    2019/12/19 17:57:46 [INFO] agent: Serf agent starting
+    2019/12/19 17:57:46 [INFO] serf: EventMemberJoin: b9b76376e9ba 192.168.42.4
+    2019/12/19 17:57:46 [INFO] agent: joining: [ha] replay: true
+    2019/12/19 17:57:46 [INFO] serf: EventMemberJoin: eeb7848ad8e0 192.168.42.3
+    2019/12/19 17:57:46 [INFO] serf: EventMemberJoin: 0dfdd2a82733 192.168.42.2
+    2019/12/19 17:57:46 [INFO] agent: joined: 1 nodes
+Application started
+    2019/12/19 17:57:47 [INFO] agent: Received event: member-join
+    2019/12/19 17:57:47 [ERR] agent: Error invoking script '/serf-handlers/member-join.sh': exit status 127
+
