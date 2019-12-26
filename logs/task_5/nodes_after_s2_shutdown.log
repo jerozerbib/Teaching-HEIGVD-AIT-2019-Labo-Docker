@@ -1,0 +1,8 @@
+# After shutting down S2
+
+root@7b9e9e31250c:/nodes# ls
+c45f549934ad
+
+root@7b9e9e31250c:/nodes# cat c45f549934ad 
+c45f549934ad 192.168.42.2
+

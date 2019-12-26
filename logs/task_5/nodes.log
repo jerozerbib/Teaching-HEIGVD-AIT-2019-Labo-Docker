@@ -1,0 +1,13 @@
+# Content of the nodes folder
+
+root@7b9e9e31250c:/nodes# ls
+08d3fe5027f5  c45f549934ad
+
+# As we could not go through the folder we used the cat command : 
+
+root@7b9e9e31250c:/nodes# cat 08d3fe5027f5
+08d3fe5027f5 192.168.42.3
+
+root@7b9e9e31250c:/nodes# cat c45f549934ad
+c45f549934ad 192.168.42.2
+

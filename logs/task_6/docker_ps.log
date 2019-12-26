@@ -1,0 +1,30 @@
+# With 3 nodes (initial state)
+
+CONTAINER ID        IMAGE                                          COMMAND             CREATED             STATUS              PORTS                                                                                    NAMES
+18985b6dbba1        13126c0809f4                                   "/init"             3 minutes ago       Up 3 minutes        3000/tcp, 7373/tcp, 7946/tcp                                                             s3
+e805522b6aed        teaching-heigvd-ait-2019-labo-docker_webapp2   "/init"             3 minutes ago       Up 3 minutes        3000/tcp, 7373/tcp, 7946/tcp                                                             s2
+47e5cf2a28a4        teaching-heigvd-ait-2019-labo-docker_webapp1   "/init"             4 minutes ago       Up 4 minutes        3000/tcp, 7373/tcp, 7946/tcp                                                             s1
+13bdc73894b8        teaching-heigvd-ait-2019-labo-docker_haproxy   "/init"             5 minutes ago       Up 5 minutes        0.0.0.0:80->80/tcp, 7373/tcp, 0.0.0.0:1936->1936/tcp, 0.0.0.0:9999->9999/tcp, 7946/tcp   ha
+
+
+# With 5 nodes (Adding two nodes from the 3 existing)
+
+CONTAINER ID        IMAGE                                          COMMAND             CREATED             STATUS              PORTS                                                                                    NAMES
+38df5a2cc8dc        13126c0809f4                                   "/init"             2 minutes ago       Up 2 minutes        3000/tcp, 7373/tcp, 7946/tcp                                                             s5
+dbb95ebae539        13126c0809f4                                   "/init"             2 minutes ago       Up 2 minutes        3000/tcp, 7373/tcp, 7946/tcp                                                             s4
+18985b6dbba1        13126c0809f4                                   "/init"             7 minutes ago       Up 7 minutes        3000/tcp, 7373/tcp, 7946/tcp                                                             s3
+e805522b6aed        teaching-heigvd-ait-2019-labo-docker_webapp2   "/init"             7 minutes ago       Up 7 minutes        3000/tcp, 7373/tcp, 7946/tcp                                                             s2
+47e5cf2a28a4        teaching-heigvd-ait-2019-labo-docker_webapp1   "/init"             7 minutes ago       Up 7 minutes        3000/tcp, 7373/tcp, 7946/tcp                                                             s1
+13bdc73894b8        teaching-heigvd-ait-2019-labo-docker_haproxy   "/init"             8 minutes ago       Up 8 minutes        0.0.0.0:80->80/tcp, 7373/tcp, 0.0.0.0:1936->1936/tcp, 0.0.0.0:9999->9999/tcp, 7946/tcp   ha
+
+
+# With 4 nodes (We remove s4  manually)
+
+CONTAINER ID        IMAGE                                          COMMAND             CREATED             STATUS              PORTS                                                                                    NAMES
+38df5a2cc8dc        13126c0809f4                                   "/init"             3 minutes ago       Up 2 minutes        3000/tcp, 7373/tcp, 7946/tcp                                                             s5
+18985b6dbba1        13126c0809f4                                   "/init"             7 minutes ago       Up 7 minutes        3000/tcp, 7373/tcp, 7946/tcp                                                             s3
+e805522b6aed        teaching-heigvd-ait-2019-labo-docker_webapp2   "/init"             8 minutes ago       Up 8 minutes        3000/tcp, 7373/tcp, 7946/tcp                                                             s2
+47e5cf2a28a4        teaching-heigvd-ait-2019-labo-docker_webapp1   "/init"             8 minutes ago       Up 8 minutes        3000/tcp, 7373/tcp, 7946/tcp                                                             s1
+13bdc73894b8        teaching-heigvd-ait-2019-labo-docker_haproxy   "/init"             9 minutes ago       Up 9 minutes        0.0.0.0:80->80/tcp, 7373/tcp, 0.0.0.0:1936->1936/tcp, 0.0.0.0:9999->9999/tcp, 7946/tcp   ha
+
+
