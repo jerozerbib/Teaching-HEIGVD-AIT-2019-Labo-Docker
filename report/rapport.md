@@ -22,6 +22,8 @@ The lab consists of 6 tasks and one initial task (the initial task should be qui
 
 The introduction task is : [Identify issues and install the tools](#Task 0 : Identify issues and install the tools)
 
+We then [conclude](#Conclusion) the lab.
+
 ## Task 0 : Identify issues and install the tools
 
 ### Questions
@@ -70,9 +72,12 @@ Note that based on the version you take, you will not be able to do those change
 #### [M3] Based on your previous answers, you have detected some issues in the current solution. Now propose a better approach at a high level.
 
 In our solution. we have to add and configure each new node manually. This could be sometimes lengthy and painful to do so. Therefore, a new approach, more dynamic, could be more than welcome in order to make adding, removing or editing a node easier and faster.
+
+A solution to this issue could be to use a script that creates the new node based on the previous node based on the name created previously. That would simulate the mechanism of auto-increment we want to do. 
+
 #### [M4] You probably noticed that the list of web application nodes is hardcoded in the load balancer configuration. How can we manage the web app nodes in a more dynamic fashion?
 
-You could create a script that adds to the configuration file the name of the node and the info needed dynamically. `HaProxy` offers a *runtime API*  that allows us to do so. A more detailed solution could be found [here](https://www.haproxy.com/blog/dynamic-scaling-for-microservices-with-runtime-api/).
+You could create a script that adds to the configuration file, the name of the node and the info needed dynamically. `HaProxy` offers a *runtime API*  that allows us to do so. A more detailed solution could be found [here](https://www.haproxy.com/blog/dynamic-scaling-for-microservices-with-runtime-api/).
 
 #### [M5] In the physical or virtual machines of a typical infrastructure we tend to have not only one main process (like the web server or the load balancer) running, but a few additional processes on the side to perform management tasks.
 
@@ -84,26 +89,24 @@ Our solution does not allow multiple processes to be launched on the same `Docke
 
 Looking at the [run](../ha/scripts/run.sh) (on the right commit version right otherwise the link does not work) , we can see that we use `rsyslogd`. We could use this command to log everything we need and forward them to a centralised server.
 
-Another solution would be to use the log Docker's mechanism of logging and send them to a server. 
-
 #### [M6] In our current solution, although the load balancer configuration is changing dynamically, it doesn't follow dynamically the configuration of our distributed system when web servers are added or removed. If we take a closer look at the `run.sh` script, we see two calls to `sed` which will replace two lines in the `haproxy.cfg` configuration file just before we start `haproxy`. You clearly see that the configuration file has two lines and the script will replace these two lines.
 
 #### What happens if we add more web server nodes? Do you think it is really dynamic? It's far away from being a dynamic configuration. Can you propose a solution to solve this?
 
-Whenever we want to add a new node to the node to the configuration file of *HaProxy* and relaunch the script in order to get the changes to stick. One way to patch this issue would the `Runtime API` of *HaProxy* and find some kind of solution to patch the problem we created.
+Whenever we want to add a new node to the server, we have to stop the server, edit *HaProxy*'s configuration file  and relaunch the script in order to get the changes to stick to the server.
+
+One way of patching this issue would be using the `Runtime API` of *HaProxy* and find some kind of solution to patch the problem we created.
 
 ### Deliverable
 
-#### Take a screenshot of the stats page of HAProxy
-#### at http://192.168.42.42:1936. You should see your backend nodes.
-
+#### Take a screenshot of the stats page of HAProxy at [http://192.168.42.42:1936](http://192.168.42.42:1936). You should see your backend nodes.
 ![stats](./assets/Task0_stats.png)
 
-Here we have only two nodes as we did not apply the modifications on the DockerFile nor the scripts presented above. We did not see fit to do so.
+Here we have only two nodes as we did not apply the modifications on the Dockerfile, the configuration files nor the scripts presented above. We did not see fit to do so.
 
 #### Give the URL of your repository URL in the lab report.
 
-The URL of our repository is this [one](https://github.com/jerozerbib/Teaching-HEIGVD-AIT-2019-Labo-Docker). 
+The URL of our repository is this [here](https://github.com/jerozerbib/Teaching-HEIGVD-AIT-2019-Labo-Docker). 
 
 ## Task 1 :  Add a process supervisor to run several processes
 
@@ -115,13 +118,17 @@ The URL of our repository is this [one](https://github.com/jerozerbib/Teaching-H
 
 We did not encounter many difficulties in this part (except the fact that the path were bloated a bit but no big deal). Everything ran smoothly and we did not spend a lot of time doing the manipulations.
 
-As for the installation of a  *process supervisor*, we found that it would be useful in order to run multiple processes in the same `Docker` *container*. As it was stated in the documentation of the lab, `Docker` is made to run a single process per *container*. If we want to bypass the single process implementation, we have to start a little process, `init` in our case, that runs as our main process and start other secondaries processes as the multiple processes we need. From there, we set up `S6` to manage our processes. At the end, we can see that the `init` process start the `Docker` configuration and `S6` will manage the other applications processes. 
+As for the installation of a  *process supervisor*, we found that it would be useful in order to run multiple processes in the same `Docker` *container*. As it was stated in the documentation of the lab, `Docker` is made to run a single process per *container*. 
+
+If we want to bypass the single process implementation, we have to start a little process, `init` in our case, that runs as our main process and start other secondaries processes as the multiple processes we need. From there, we set up `S6` to manage our processes. 
+
+At the end, we can see that the `init` process start the `Docker` configuration and `S6` will manage the other applications processes.
 
 ## Task 2 :  Add a tool to manage membership in the web server cluster
 
 ### Deliverable 1 : Provide the docker log output for each of the containers: `ha`, `s1` and `s2`. You need to create a folder `logs` in your repository to store the files separately from the lab report. For each lab task create a folder and name it using the task number. No need to create a folder when there are no logs
 
-Check [Task 2](../logs/task_2). The name of the files are *ha*, *s1* and *s2*
+Check [Task 2](../logs/task_2). The files are called *ha*, *s1* and *s2*
 
 ### Deliverable 2 : Give the answer to the question about the existing problem the with the current solution.
 
@@ -132,7 +139,7 @@ The existing problem with the current solution is that we create a *cluster* aro
 `Serf is a decentralized solution for service discovery and orchestration`
 `that is lightweight, highly available, and fault tolerant.` 
 
-This quote [`Serf's github page`](https://github.com/hashicorp/serf) means that `Serf` is a discovery service that allows to detect nodes failures and notify the rest of the cluster. *"An event system is built on top of Serf, letting you use Serf's gossip protocol to propagate events such as deploys, configuration changes, etc. Serf is completely masterless with no single point of failure."* 
+This quote from [`Serf's github page`](https://github.com/hashicorp/serf) means that `Serf` is a discovery service that allows to detect nodes failures and notify the rest of the cluster. *"An event system is built on top of Serf, letting you use Serf's gossip protocol to propagate events such as deploys, configuration changes, etc. Serf is completely masterless with no single point of failure."* 
 
 A `GOSSIP protocol` is a process of computer peer-to-peer communication based on the spread on an epidemics.  
 
@@ -144,11 +151,11 @@ As seen [here](https://sysadmin.libhunt.com/serf-alternatives), we can see that 
 
 ### Deliverable 1 : Provide the docker log output for each of the containers:  `ha`, `s1` and `s2`. Put your logs in the `logs` directory you created in the previous task.
 
-Check [Task 3](../logs/task_3). The files are called *ha*, *s1* and *s2*.
+Check [Task 3](../logs/task_3/). The files are called *ha*, *s1* and *s2*.
 
 ### Deliverable 2 : Provide the logs from the `ha` container gathered directly from the `/var/log/serf.log` file present in the container. Put the logs in the `logs` directory in your repo.
 
-Check [Task 3](../logs/task_3). The file is called *serf.log*.
+Check [Task 3](../logs/task_3/). The file is called *serf.log*.
 
 ## Task 4 : Use a template engine to easily generate configuration files
 
@@ -170,7 +177,7 @@ RUN command 1 && command 2 && command 3
 
 Each command we asked the `Docker` container to do is another layer created. Therefore, it creates a heavier image . Combining multiple commands allows the image to run them simultaneously and therefore reduce the size of the image. 
 
-[`docker-squash`](https://github.com/jwilder/docker-squash) allows to reduce the size of the  image automatically. Some use cases are available [here](https://github.com/jwilder/docker-squash#Usage). This solution is not optimal as some compatibility issues have been noted. 
+[`docker-squash`](https://github.com/jwilder/docker-squash) allows to reduce the size of the  image automatically. Some use cases are available [here](https://github.com/jwilder/docker-squash#Usage). This solution is not optimal as some compatibility issues have been reported. 
 
 It is also possible to flatten a `Docker` container :
 
@@ -190,13 +197,13 @@ docker import - some-image-name:latest
 
 ### Deliverable 2 : Propose a different approach to architecture our images to be able to reuse as much as possible what we have done. Your proposition should also try to avoid as much as possible repetitions between your images.
 
-In order to reuse the most things possible in our architecture, we could try to create another image with all the commands that never change throughout the process of building the containers. Therefore, we build it one time and do not have to build it again. You can make inherit the image from a "*mother image*.
+In order to reuse the most things possible in our architecture, we could try to create another image with all the commands that never change throughout the process of building the containers. Therefore, we build it one time and do not have to build it again. You can make inherit the image from a "*mother image*".
 
 In order to do so, we could use the `FROM` command in the *daughter images*. 
 
 ### Deliverable 3 : Provide the `/tmp/haproxy.cfg` file generated in the `ha` container after each step.  Place the output into the `logs` folder like you already did for the Docker logs in the previous tasks. Three files are expected.
 
-Check [Task 4](../logs/task_4).  The file is called *haproxy.cfg* and all the outputs are in the same file. 
+Check [Task 4](../logs/task_4).  The file is called *haproxy.cfg* and all the outputs are in the same file. (Instead of three files, they all have been combined in one and comments show where is what.)
 
 ### In addition, provide a log file containing the output of the `docker ps` console and another file (per container) with `docker inspect `. Four files are expected.
 
@@ -257,11 +264,11 @@ Check [Task 6](../logs/task_6). The file is called *docker_ps.log*.
 
 ### Give your own feelings about the final solution. Propose improvements or ways to do the things differently. If any, provide references to your readings for the improvements.
 
-The final solution seems to be reactive and adding or deleting backend nodes is easy. One issue we can find  on the current solution is that it is the best way to adding or removing a backend node dynamically. We therefore, cannot do the same for the `HaProxy` container. We should maybe do the same for this container. 
+The final solution seems to be reactive and adding or deleting backend nodes is easy. One issue we can find  on the current solution is that it is the best way to adding or removing only a **backend** node dynamically. We therefore, cannot do the same for the `HaProxy` container. We have to launch manually the `ha` container and cannot launch another one on the fly. We should maybe do the same for this container. 
 
 ### (Optional:) Present a live demo where you add and remove a backend container.
 
-If you need any more info, or a live demonstration , please feel free to contact us and we will be pleased to do so.
+The demo has already been done in class to Yann Lederrey on the date of the 06/01/2020 at 14:56,
 
 ## Conclusion
 
